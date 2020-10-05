@@ -14,7 +14,7 @@ import os
 
 print(os.getcwd())
 
-f = open('DatosSinapsisArtificial/TrozoC.txt','r')
+f = open('DatosSinapsisArtificial/TrozoG.txt','r')
 
 interval = 0
 channels = 0
@@ -22,6 +22,7 @@ samples = 0
 
 vd = []
 lp = []
+tyd = []
 
 for i,line in enumerate(f.readlines()):
 	print("Line: ", i)
@@ -32,13 +33,15 @@ for i,line in enumerate(f.readlines()):
 	elif i == 2 :
 		samples = line.split(" ")[-1]
 	else:
-		vd.append(line.split("\t")[1])
 		lp.append(line.split("\t")[0])
+		vd.append(line.split("\t")[1])
+		tyd.append(line.split("\t")[2])
 
-with open('vdTrozoC.pickle', 'wb') as handle:
+with open('vdTrozoG.pickle', 'wb') as handle:
 	pickle.dump(vd, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open('lpTrozoC.pickle', 'wb') as handle:
+with open('lpTrozoG.pickle', 'wb') as handle:
 	pickle.dump(lp, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
+with open('tydTrozoG.pickle', 'wb') as handle:
+	pickle.dump(tyd, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
