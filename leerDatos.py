@@ -14,7 +14,9 @@ import os
 
 print(os.getcwd())
 
-f = open('DatosSinapsisArtificial/TrozoC.txt','r')
+directory = "DatosSinapsisArtificial/TrozoC.txt"
+# directory = "D:\\Sergio\\Master\\BSP\\DatosSinapsisArtificial/TrozoC.txt"
+f = open(directory,'r')
 
 interval = 0
 channels = 0
@@ -32,8 +34,12 @@ for i,line in enumerate(f.readlines()):
 	elif i == 2 :
 		samples = line.split(" ")[-1]
 	else:
-		vd.append(line.split("\t")[1])
-		lp.append(line.split("\t")[0])
+		split = line.split("\t")
+		vd_value = split[1]
+		lp_value = split[0]
+
+		vd.append(float(vd_value.replace(",", ".")))
+		lp.append(float(lp_value.replace(",", ".")))
 
 with open('vdTrozoC.pickle', 'wb') as handle:
 	pickle.dump(vd, handle, protocol=pickle.HIGHEST_PROTOCOL)
