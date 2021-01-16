@@ -1,9 +1,11 @@
 from spike_detector import main as spikeDetector
 import pickle
 import math
+from matplotlib import pyplot as plt
 
 from wordsUtils import posibleWords,getWords
 from posibilitiesUtils import getPosibilitiesRS,getPosibilities
+from transformToBinary import transformToBinary
     
 def mutualInformation(ritmA,ritmB,wordLength):
     r = getWords(ritmA,wordLength)
@@ -33,7 +35,24 @@ def main():
     lp_directory = "./lpTrozoR_matrix.pickle"
     vd = pickle.load(open(vd_directory, "rb"))
     lp = pickle.load(open(lp_directory, "rb"))
+    
+    wordsLength = range(1,8)
+    dT = range(1,100,10)
+    
+    matrix = []
+    for i in range(0,len(wordsLength)):
+        for j in range(0,len(dT)):
+            rA = transformToBinary(vd,dT[j])
+            rB = transformToBinary(lp,dT[j])
+            matrix.append(mutualInformation(rA,rB,wordsLength[i]))
+        plt.plot(dT,matrix)
+        plt.title("Informacion Mutua palabras de "+str(wordsLength[i])+" bit")    
+        plt.ylabel('IM')    
+        plt.xlabel('dT')    
+        plt.show()    
+        matrix = []
       
 
-
+if __name__ == "__main__":
+    main()
 

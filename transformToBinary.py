@@ -12,9 +12,7 @@ def transformToBinary(data,dT):
     for i in range(0,l-dif):
         last = i+1
         if last%dT == 0:
-            print(data[first:last])
             matrix.append(getBinaryValue(data[first:last]))
             first = last
-    print(data[first:l])
     matrix.append(getBinaryValue(data[first:l]))
     return matrix
