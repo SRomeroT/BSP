@@ -37,7 +37,7 @@ def main():
     lp = pickle.load(open(lp_directory, "rb"))
     
     wordsLength = range(1,8)
-    dT = range(1,100,10)
+    dT = range(1,1000,10)
     
     matrix = []
     for i in range(0,len(wordsLength)):
