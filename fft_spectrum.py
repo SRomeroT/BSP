@@ -1,38 +1,68 @@
+
+# coding: utf-8
+
+# In[ ]:
+
+
 import math
 import numpy as np
-import  matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import pickle
+from numpy.fft import fft, fftfreq
 
-part = "R"
+def powerSpectrum(signal_array,signal_spacing,nombre_señal):
+    signal_freq = 1/signal_spacing
+    n_signal = len(signal_array)
 
-signal_name_vd = "vdTrozo" + part
-signal_name_lp = "lpTrozo" + part
-vd_directory = signal_name_vd + ".pickle"
-lp_directory = signal_name_lp  + ".pickle"
+    freqs_signal = (signal_freq*1000)*np.arange(0,n_signal)/n_signal
 
-vd_directory = "D:\\Sergio\\Master\\BSP\\" + vd_directory
-lp_directory = "D:\\Sergio\\Master\\BSP\\" + lp_directory
+    mask = fftfreq(n_signal) > 0
 
+    fft_signal = fft(signal_array)
 
-vd = pickle.load(open(vd_directory, "rb" ))
-lp = pickle.load(open(lp_directory , "rb" ))
+    fft_unilateral = (2.0 * np.abs(fft_signal/n_signal))
 
-signal_size = len(vd)
-sample_freq = 0.01
-sampling_rate = 1/sample_freq
+    ps_signal = 2.0 * np.square(np.abs(fft_signal/n_signal))
 
-x = vd
+    plt.figure(figsize=(12, 6))
+    plt.plot(freqs_signal[mask], fft_unilateral[mask])
+    plt.title('FFT vs Frecuencia - ' + nombre_señal)
+    plt.xlabel('Frecuencia (Hz)')
+    plt.ylabel('FFT (mV)')
+    plt.show()
 
-num_final = signal_size*sample_freq
-time = np.arange(0,num_final,sample_freq)
-plt.plot(time,x)
-plt.show()
-fft_data = np.fft.fft(x)
+    plt.figure(figsize=(12, 6))
+    plt.plot(freqs_signal[mask], ps_signal[mask])
+    plt.title('Power Espectrum - ' + nombre_señal)
+    plt.xlabel('Frecuencia (Hz)')
+    plt.ylabel('Power ($mV^2/Hz$)')
+    plt.xlim(0,2000)
+    plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+    plt.show()
 
-abs_fourier_transform = np.abs(fft_data)
-power_spectrum = np.square(abs_fourier_transform)
+    return freqs_signal,fft_signal,fft_unilateral,ps_signal
 
-frequency = np.linspace(0, sampling_rate/2, len(power_spectrum))
+def main():
+    part = "C"
 
-plt.plot(frequency, power_spectrum)
-plt.show()
+    signal_name_vd = "vdTrozo" + part
+    signal_name_lp = "lpTrozo" + part
+
+    vd_directory = signal_name_vd + ".pickle"
+    lp_directory = signal_name_lp  + ".pickle"
+
+    vd = pickle.load(open(vd_directory, "rb" ))
+    lp = pickle.load(open(lp_directory , "rb" ))
+
+    vd = np.array(np.char.replace(vd, ',', '.'),dtype='double')
+    lp = np.array(np.char.replace(lp, ',', '.'),dtype='double')
+
+    powerSpectrum(np.array(vd,dtype='double'),0.1,'Recuperacion - VD')
+
+    powerSpectrum(np.array(lp,dtype='double'),0.1,'Recuperacion - LP')
+    
+    return
+
+if __name__ == "__main__":
+    main()
+
