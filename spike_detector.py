@@ -5,20 +5,19 @@ import locale
 import pickle
 
 
-def detect_event(signal, sample_freq):
+def detect_event(signal, sample_freq,threshold = 0.3):
     num_spike = 0
 
     matrix = []
 
-    threshold = 0.3
-
     signal_size = len(signal)
 
-    for i in range(0, signal_size-1, sample_freq):
+    for i in range(1, signal_size-1, sample_freq):
+        prev_value = float(signal[i - 1].replace(",","."))
         current_value = float(signal[i].replace(",","."))
         next_value = float(signal[i + 1].replace(",","."))
 
-        if next_value <= current_value and current_value > threshold:
+        if prev_value<current_value and next_value < current_value and current_value > threshold:
             num_spike += 1
             matrix.append(1)
         else:
@@ -48,8 +47,8 @@ def main():
     vd = pickle.load(open(vd_directory, "rb"))
     lp = pickle.load(open(lp_directory, "rb"))
 
-    vd_matrix = detect_event(vd, sample_freq)
-    lp_matrix = detect_event(lp, sample_freq)
+    vd_matrix = detect_event(vd, sample_freq,0.33)
+    lp_matrix = detect_event(lp, sample_freq,1.12)
 
     with open(signal_name_vd + "_matrix.pickle", 'wb') as handle:
         pickle.dump(vd_matrix, handle, protocol=pickle.HIGHEST_PROTOCOL)

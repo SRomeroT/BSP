@@ -11,12 +11,12 @@ def getWords(data,lengthWord):
      matrixWords =[]
      l = len(data)
      firstElement = 0
-     for i in range(0,l):
+     for i in range(l):
          if i >= lengthWord -1:
              element = map(str, data[firstElement:i+1])
              matrixWords.append(functools.reduce(lambda a,b : a+b,element))
              if lengthWord ==1:
                  firstElement = i+1
              else:
-                 firstElement=i
+                 firstElement+=1
      return matrixWords   
