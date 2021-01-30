@@ -42,7 +42,7 @@ def main():
     vd = pickle.load(open(vd_directory, "rb"))
     lp = pickle.load(open(lp_directory, "rb"))
 
-    wordsLength = [4, 8]
+    wordsLength = [1, 2, 4, 8]
     dT = range(1, 10000, 10)
     matrix = []
     windows = []
